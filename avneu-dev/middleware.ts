@@ -1,33 +1,46 @@
 import { createServerClient } from '@supabase/ssr';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
-export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
+export async function middleware(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({
+    request,
+  });
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { 
-      cookies: { 
-        getAll: () => req.cookies.getAll(), 
-        setAll: (cookiesToSet) => { 
-          cookiesToSet.forEach(({ name, value }) => req.cookies.set(name, value)); 
-        } 
-      } 
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          // Tambahkan tipe data eksplisit di sini
+          cookiesToSet.forEach(({ name, value }) => {
+            request.cookies.set(name, value);
+          });
+          supabaseResponse = NextResponse.next({
+            request,
+          });
+          cookiesToSet.forEach(({ name, value, options }) => {
+            supabaseResponse.cookies.set(name, value, options);
+          });
+        },
+      },
     }
   );
-  
-  const { data: { session } } = await supabase.auth.getSession();
-  
-  // Proteksi route sensitif
-  if (req.nextUrl.pathname.startsWith('/avnueadmin') || req.nextUrl.pathname.startsWith('/profile')) {
-    if (!session) {
-      return NextResponse.redirect(new URL('/signin', req.url));
-    }
-  }
-  return res;
+
+  // Opsional: Cek sesi user jika perlu proteksi route
+  // const { data: { session } } = await supabase.auth.getSession();
+  // if (!session && !request.nextUrl.pathname.startsWith('/signin')) {
+  //   return NextResponse.redirect(new URL('/signin', request.url));
+  // }
+
+  return supabaseResponse;
 }
 
-export const config = { 
-  matcher: ['/avnueadmin/:path*', '/profile/:path*', '/rekber/:path*'] 
+export const config = {
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
 };
