@@ -1,27 +1,38 @@
 import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
 
   if (code) {
+    const cookieStore = await cookies();
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      { 
-        cookies: { 
-          getAll: () => request.cookies.getAll(), 
-          setAll: (cookiesToSet) => { 
-            cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value)); 
-          } 
-        } 
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll(cookiesToSet: { name: string; value: string; options?: Record<string, any> }[]) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) => {
+                cookieStore.set(name, value, options);
+              });
+            } catch (error) {
+              // The `setAll` method was called from a Server Component.
+              // This can be ignored if you have middleware refreshing user sessions.
+            }
+          },
+        },
       }
     );
+
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  // Redirect ke halaman setup username setelah login sukses
-  return NextResponse.redirect(new URL('/profile/setup', requestUrl.origin));
+  // Redirect ke halaman setelah login berhasil
+  return NextResponse.redirect(new URL('/', requestUrl.origin));
 }
