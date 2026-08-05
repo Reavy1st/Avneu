@@ -1,11 +1,10 @@
 import Link from 'next/link';
 
-// Data dummy kategori Roblox
 const robloxCategories = [
-  { id: 'robux', name: 'Top Up Robux', price: 'Mulai Rp 15.000', image: 'https://placehold.co/300x200/ef4444/ffffff?text=ROBUX', desc: 'Proses instan via Gamepass/Badge' },
-  { id: 'akun', name: 'Jual Beli Akun', price: 'Mulai Rp 50.000', image: 'https://placehold.co/300x200/3b82f6/ffffff?text=AKUN+RBLX', desc: 'Akun limited, bloxfruit, & premium' },
-  { id: 'item', name: 'Item Limited', price: 'Harga Pasar', image: 'https://placehold.co/300x200/f59e0b/ffffff?text=LIMITED', desc: 'Trading item rare & limited U' },
-  { id: 'joki', name: 'Jasa Joki Blox', price: 'Mulai Rp 20.000', image: 'https://placehold.co/300x200/10b981/ffffff?text=JOKI+BLOX', desc: 'Leveling cepat & aman terpercaya' },
+  { id: 'robux', name: 'Top Up Robux', price: 'Mulai Rp 15.000', bg: 'bg-red-600', desc: 'Proses instan via Gamepass/Badge' },
+  { id: 'akun', name: 'Jual Beli Akun', price: 'Mulai Rp 50.000', bg: 'bg-blue-600', desc: 'Akun limited, bloxfruit, & premium' },
+  { id: 'item', name: 'Item Limited', price: 'Harga Pasar', bg: 'bg-yellow-500', desc: 'Trading item rare & limited U' },
+  { id: 'joki', name: 'Jasa Joki Blox', price: 'Mulai Rp 20.000', bg: 'bg-green-600', desc: 'Leveling cepat & aman terpercaya' },
 ];
 
 export default function Home() {
@@ -22,7 +21,6 @@ export default function Home() {
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <Link href="/topup" className="hover:text-white transition-colors">Store</Link>
             <Link href="/rekber" className="hover:text-white transition-colors">Rekber</Link>
-            <Link href="/cek-trx" className="hover:text-white transition-colors">Cek Transaksi</Link>
           </nav>
           <div className="flex gap-3">
             <Link href="/signin" className="text-sm font-medium text-gray-300 hover:text-white py-2">Masuk</Link>
@@ -66,4 +64,81 @@ export default function Home() {
           {robloxCategories.map((cat) => (
             <Link 
               key={cat.id} 
-              href={`/category/
+              href={`/category/${cat.id}`}
+              className="group bg-gray-800 rounded-xl hover:bg-gray-750 transition-all overflow-hidden border border-gray-700 hover:border-red-600/50"
+            >
+              <div className={`aspect-video w-full ${cat.bg} flex items-center justify-center text-white/50 text-4xl font-bold`}>
+                {cat.name.charAt(0)}
+              </div>
+              <div className="p-5">
+                <h3 className="font-bold text-lg mb-1 group-hover:text-red-500 transition-colors">{cat.name}</h3>
+                <p className="text-xs text-gray-400">{cat.desc}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Fitur Unggulan */}
+      <section className="bg-gray-800 py-16 px-4 border-y border-gray-700">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
+          <div className="bg-gray-900 p-6 rounded-xl border border-gray-700">
+            <div className="w-10 h-10 bg-green-600/20 text-green-500 rounded-lg flex items-center justify-center mb-4 text-xl">🛡️</div>
+            <h3 className="font-bold text-lg mb-2">Rekber Aman</h3>
+            <p className="text-gray-400 text-sm">Sistem rekber otomatis menahan dana sampai barang diterima. Bebas scam!</p>
+          </div>
+          <div className="bg-gray-900 p-6 rounded-xl border border-gray-700">
+            <div className="w-10 h-10 bg-blue-600/20 text-blue-500 rounded-lg flex items-center justify-center mb-4 text-xl">⚡</div>
+            <h3 className="font-bold text-lg mb-2">Auto Delivery</h3>
+            <p className="text-gray-400 text-sm">Robux & Item masuk otomatis ke akun Anda dalam hitungan detik.</p>
+          </div>
+          <div className="bg-gray-900 p-6 rounded-xl border border-gray-700">
+            <div className="w-10 h-10 bg-purple-600/20 text-purple-500 rounded-lg flex items-center justify-center mb-4 text-xl">💬</div>
+            <h3 className="font-bold text-lg mb-2">Support 24/7</h3>
+            <p className="text-gray-400 text-sm">Tim admin siap membantu kendala transaksi kapan saja via Live Chat.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-950 text-gray-500 py-12 px-4 text-sm">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-6 h-6 bg-red-600 rounded flex items-center justify-center text-white text-xs font-bold">R</div>
+              <span className="text-white font-bold text-lg">AvnueRoblox</span>
+            </div>
+            <p className="mb-4">Platform marketplace Roblox terbesar dan teraman di Indonesia sejak 2024.</p>
+          </div>
+          <div>
+            <h4 className="text-white font-bold mb-4">Produk</h4>
+            <ul className="space-y-2">
+              <li><Link href="/topup/robux" className="hover:text-white">Top Up Robux</Link></li>
+              <li><Link href="/marketplace/akun" className="hover:text-white">Jual Akun Blox</Link></li>
+              <li><Link href="/marketplace/limited" className="hover:text-white">Item Limited U</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white font-bold mb-4">Layanan</h4>
+            <ul className="space-y-2">
+              <li><Link href="/rekber" className="hover:text-white">Jasa Rekber</Link></li>
+              <li><Link href="/jadwal-maintenance" className="hover:text-white">Jadwal Maintenance</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white font-bold mb-4">Pembayaran</h4>
+            <div className="flex gap-2 flex-wrap">
+              <span className="bg-gray-800 px-2 py-1 rounded text-xs border border-gray-700">QRIS</span>
+              <span className="bg-gray-800 px-2 py-1 rounded text-xs border border-gray-700">DANA</span>
+              <span className="bg-gray-800 px-2 py-1 rounded text-xs border border-gray-700">GOPAY</span>
+              <span className="bg-gray-800 px-2 py-1 rounded text-xs border border-gray-700">BCA VA</span>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-gray-800 text-center text-xs">
+          © {new Date().getFullYear()} Avnue Roblox Store. All rights reserved.
+        </div>
+      </footer>
+    </div>
+  );
+}
