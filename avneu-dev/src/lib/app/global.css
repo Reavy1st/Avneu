@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tambahkan custom styles global di sini jika perlu */
+body {
+  @apply bg-gray-50 text-gray-900 antialiased;
+}
