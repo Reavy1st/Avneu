@@ -9,4 +9,18 @@ export const metadata: Metadata = {
   description: "Platform topup game dan rekber transaksi aman dengan sistem realtime.",
 };
 
-export default function RootLay
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="id">
+      <body className={inter.className}>
+        <main className="flex flex-col min-h-screen">
+          {children}
+        </main>
+      </body>
+    </html>
+  );
+}
