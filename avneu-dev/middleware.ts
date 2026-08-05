@@ -14,8 +14,7 @@ export async function middleware(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet) {
-          // Tambahkan tipe data eksplisit di sini
+        setAll(cookiesToSet: { name: string; value: string; options?: Record<string, any> }[]) {
           cookiesToSet.forEach(({ name, value }) => {
             request.cookies.set(name, value);
           });
@@ -29,12 +28,6 @@ export async function middleware(request: NextRequest) {
       },
     }
   );
-
-  // Opsional: Cek sesi user jika perlu proteksi route
-  // const { data: { session } } = await supabase.auth.getSession();
-  // if (!session && !request.nextUrl.pathname.startsWith('/signin')) {
-  //   return NextResponse.redirect(new URL('/signin', request.url));
-  // }
 
   return supabaseResponse;
 }
